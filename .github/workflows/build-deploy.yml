@@ -3,6 +3,9 @@ on:
  push:
    branches:
      - "main"
+    paths-ignore:
+      - "README.md"
+      - ".gitignore"
 
 permissions:
   packages: write
@@ -38,7 +41,13 @@ jobs:
       - name: Deploy
         uses: fjogeleit/http-request-action@v1
         with:
-          url: "https://swarmctl.alexraskin.com/v1/update/goping?image=ghcr.io/alexraskin/goping:${{ github.sha }}"
+          url: "https://swarmctl.alexraskin.com/v1/update/goping_server?image=ghcr.io/alexraskin/goping:${{ github.sha }}"
           method: "POST"
           timeout: 60000
           customHeaders: '{"Authorization": "Bearer ${{ secrets.AUTH_TOKEN }}"}'
+      - name: Shoutrrr
+        uses: containrrr/shoutrrr-action@v1
+        with:
+          url: ${{ secrets.SHOUTRRR_URL }}
+          title: Deployed goping:${{ github.sha }} to swarmctl
+          message: See changes at ${{ github.event.compare }}.
