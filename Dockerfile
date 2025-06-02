@@ -23,5 +23,8 @@ RUN apk --no-cache add ca-certificates
 
 COPY --from=build /build/goping /bin/goping
 
+EXPOSE 8080
 
-CMD ["/bin/goping"]
+ENTRYPOINT ["/bin/goping"]
+
+CMD ["-metrics-port", "8080"]

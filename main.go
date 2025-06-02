@@ -153,6 +153,7 @@ func startMetricsServer(port string) *http.Server {
 
 func main() {
 	debug := flag.Bool("debug", false, "enable debug logging")
+	metricsPort := flag.String("metrics-port", "8080", "port to listen on for metrics")
 	flag.Parse()
 
 	logger = setupLogger(*debug)
@@ -163,12 +164,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	metricsPort := getEnv("METRICS_PORT")
-	if metricsPort == "" {
-		metricsPort = "8080"
-	}
-
-	metricsServer := startMetricsServer(metricsPort)
+	metricsServer := startMetricsServer(*metricsPort)
 
 	go func() {
 		uptimeTicker := time.NewTicker(1 * time.Second)
