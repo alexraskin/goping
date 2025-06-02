@@ -68,10 +68,6 @@ func init() {
 	retryClient.RetryMax = 5
 	retryClient.Backoff = retryablehttp.DefaultBackoff
 	retryClient.CheckRetry = retryablehttp.DefaultRetryPolicy
-
-	if err := godotenv.Load(); err != nil {
-		logger.Info("No .env file found, continuing with system environment", "error", err)
-	}
 }
 
 func getEnv(key string) string {
@@ -156,7 +152,13 @@ func main() {
 	metricsPort := flag.String("metrics-port", "8080", "port to listen on for metrics")
 	flag.Parse()
 
+	// Initialize logger once
 	logger = setupLogger(*debug)
+
+	// Load environment variables
+	if err := godotenv.Load(); err != nil {
+		logger.Info("No .env file found, continuing with system environment", "error", err)
+	}
 
 	webhookURL := getEnv("WEBHOOK_URL")
 	if webhookURL == "" {
